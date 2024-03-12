@@ -7,6 +7,14 @@ let toColor;
 
 let migSortedAscending;
 
+// Function to load data asynchronously
+async function loadData() {
+  // Use fetch or any other method to load the data
+  const response = await fetch("data.json");
+  const data = await response.json();
+  return data;
+}
+
 function preload() {
   d3.csv("./data/selbstwirksamkeit.csv", d3.autoType).then((csv) => {
     console.log("Loaded data: ", csv);
@@ -14,6 +22,11 @@ function preload() {
     console.log("Data with numbers: ", data);
     migSortedAscending = sortArray(data, "asc", "Value");
     console.log("Migration Sorted Ascending:", migSortedAscending);
+
+    // d3 way. still need to copy the array if you want to prevent mutations
+    let migSort = [...data].sort((a, b) => d3.ascending(a.Value, b.Value));
+
+    console.log("migSort Sorted Ascending:", migSort);
   });
 }
 
