@@ -1,0 +1,13 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Umgebungsvariablen (nie ins Repo!)
+.env
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/

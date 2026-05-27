@@ -26,7 +26,8 @@ function setup() {
 
   let loadButton = {
     loadSettings: function () {
-      loadSettings();
+      // loadSettings();
+      loadSettingsFromFile();
     },
   };
   gui.add(loadButton, "loadSettings").name("Load Settings");
@@ -54,7 +55,11 @@ function keyPressed() {
 
 function saveSettings() {
   // Save current state to localStorage
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(circleObjects));
+  //  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(circleObjects));
+  // Format: "settings_2024-12-18" (just the date)
+  const dateString = new Date().toISOString().split("T")[0];
+  const filename = "settings_" + dateString;
+  saveJSON(circleObjects, filename);
   console.log("Settings saved!");
 }
 
@@ -89,4 +94,34 @@ function loadSettings() {
   } else {
     console.log("No saved settings found.");
   }
+}
+
+function loadSettingsFromFile() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json";
+  input.onchange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const loaded = JSON.parse(e.target.result);
+        Object.assign(circleObjects, loaded);
+
+        // Update GUI display
+        for (let controller of gui.__controllers) {
+          controller.updateDisplay();
+        }
+
+        console.log("Settings loaded from " + file.name);
+      } catch (error) {
+        console.error("Failed to load JSON:", error);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  input.click();
 }

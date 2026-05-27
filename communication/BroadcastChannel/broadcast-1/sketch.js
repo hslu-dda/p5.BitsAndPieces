@@ -22,3 +22,12 @@ function draw() {
     });
   }
 }
+
+function keyPressed() {
+  if (key >= "1" && key <= "6") {
+    channel.postMessage({
+      keyCode: keyCode,
+      key: key,
+    });
+  }
+}
